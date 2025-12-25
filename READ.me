@@ -1,0 +1,98 @@
+# SauceDemo Automation Framework
+
+A robust BDD test automation framework for [SauceDemo](https://www.saucedemo.com) using Java, Selenium WebDriver, and Cucumber.
+
+## Tech Stack
+
+- **Java 17** - Programming language
+- **Selenium 4.16** - Browser automation
+- **Cucumber 7.15** - BDD framework
+- **JUnit 4** - Test runner
+- **WebDriverManager** - Automatic driver management
+- **AssertJ** - Fluent assertions
+- **Maven** - Build tool
+
+## Project Structure
+
+```
+saucedemo-automation/
+├── src/main/java/com/saucedemo/
+│   ├── pages/           # Page Object Model classes
+│   └── utils/           # Utilities (DriverManager, ConfigReader)
+├── src/test/java/com/saucedemo/
+│   ├── runners/         # Cucumber test runners
+│   └── stepdefinitions/ # Step definitions & hooks
+├── src/test/resources/
+│   ├── features/        # Cucumber feature files
+│   └── config.properties
+└── pom.xml
+```
+
+## Prerequisites
+
+- Java JDK 17+
+- Maven 3.8+
+- Chrome/Firefox/Edge browser
+
+## Setup
+
+```bash
+# Clone repository
+git clone <repository-url>
+cd saucedemo-automation
+
+# Install dependencies
+mvn clean install -DskipTests
+```
+
+## Running Tests
+
+```bash
+# Run all tests
+mvn test
+
+# Run smoke tests only
+mvn test -Dcucumber.filter.tags="@smoke"
+
+# Run specific feature
+mvn test -Dcucumber.features="src/test/resources/features/login.feature"
+
+# Run with different browser
+mvn test -Dbrowser=firefox
+
+# Run headless
+mvn test -Dheadless=true
+```
+
+## Test Reports
+
+After execution, reports are generated in:
+- **HTML Report:** `target/cucumber-reports/cucumber.html`
+- **JSON Report:** `target/cucumber-reports/cucumber.json`
+
+## Configuration
+
+Edit `src/test/resources/config.properties`:
+
+| Property | Description | Default |
+|----------|-------------|---------|
+| browser | Browser type | chrome |
+| headless | Run headless mode | false |
+| implicit.wait | Implicit wait (seconds) | 10 |
+| base.url | Application URL | https://www.saucedemo.com |
+
+## Test Tags
+
+| Tag | Description |
+|-----|-------------|
+| @smoke | Critical path tests |
+| @e2e | End-to-end scenarios |
+| @positive | Happy path tests |
+| @negative | Error handling tests |
+| @login | Login module tests |
+| @checkout | Checkout module tests |
+
+## Author
+
+Mike Ryan B. Cervantes  
+Senior Quality Assurance Engineer
