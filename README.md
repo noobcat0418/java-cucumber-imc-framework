@@ -1,4 +1,4 @@
-# 🧪 Java Cucumber Selenium Framework
+# Java Cucumber Selenium Framework
 
 A robust BDD (Behavior-Driven Development) test automation framework for [SauceDemo](https://www.saucedemo.com) e-commerce web application using Java, Selenium WebDriver, and Cucumber.
 
@@ -9,7 +9,7 @@ A robust BDD (Behavior-Driven Development) test automation framework for [SauceD
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
@@ -23,7 +23,7 @@ A robust BDD (Behavior-Driven Development) test automation framework for [SauceD
 
 ---
 
-## ✨ Features
+## Features
 
 - ✅ **Page Object Model (POM)** design pattern for maintainability
 - ✅ **BDD approach** with Gherkin syntax for readable test scenarios
@@ -36,7 +36,7 @@ A robust BDD (Behavior-Driven Development) test automation framework for [SauceD
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Technology | Purpose |
 |------------|---------|
@@ -50,7 +50,7 @@ A robust BDD (Behavior-Driven Development) test automation framework for [SauceD
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 java-cucumber-framework/
@@ -84,7 +84,7 @@ java-cucumber-framework/
 
 ---
 
-## 📌 Prerequisites
+## Prerequisites
 
 Before running this project, ensure you have:
 
@@ -101,7 +101,7 @@ mvn -version
 
 ---
 
-## 🚀 Installation
+## Installation
 
 1. **Clone the repository**
    ```bash
@@ -120,7 +120,7 @@ mvn -version
 
 ---
 
-## ▶️ Running Tests
+## Running Tests
 
 ### Run all tests
 ```bash
@@ -158,7 +158,7 @@ mvn test -Dheadless=true
 
 ---
 
-## 📊 Test Reports
+## Test Reports
 
 After test execution, reports are generated at:
 
@@ -172,7 +172,7 @@ Open the HTML report in your browser for detailed results.
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 Edit `src/test/resources/config.properties`:
 
@@ -194,7 +194,7 @@ default.password=secret_sauce
 
 ---
 
-## 🏷️ Test Tags Reference
+## Test Tags Reference
 
 | Tag | Description |
 |-----|-------------|
@@ -207,7 +207,7 @@ default.password=secret_sauce
 
 ---
 
-## 📝 Sample Test Scenario
+## Sample Test Scenario
 
 ```gherkin
 @smoke @e2e
@@ -226,7 +226,7 @@ Scenario: Complete checkout with valid information
 
 ---
 
-## 👤 Author
+## Author
 
 **Mike Ryan B. Cervantes**  
 Senior Quality Assurance Engineer
@@ -236,10 +236,4 @@ Senior Quality Assurance Engineer
 
 ---
 
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
----
-
-⭐ If you found this helpful, please give it a star!
+ If you found this helpful, please give it a star!
