@@ -1,128 +1,113 @@
-package com.saucedemo.pages;
+package com.saucedemo.stepdefinitions;
 
+import com.saucedemo.pages.CartPage;
+import com.saucedemo.pages.CheckoutPage;
+import com.saucedemo.pages.InventoryPage;
+import com.saucedemo.utils.DriverManager;
+import io.cucumber.datatable.DataTable;
+import io.cucumber.java.en.*;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 
-public class CheckoutPage extends BasePage {
+import java.util.List;
+import java.util.Map;
 
-    // Checkout Step One - Information
-    @FindBy(id = "first-name")
-    private WebElement firstNameInput;
+import static org.assertj.core.api.Assertions.assertThat;
 
-    @FindBy(id = "last-name")
-    private WebElement lastNameInput;
+public class CheckoutSteps {
+    private final WebDriver driver = DriverManager.getDriver();
+    private InventoryPage inventoryPage;
+    private CartPage cartPage;
+    private CheckoutPage checkoutPage;
 
-    @FindBy(id = "postal-code")
-    private WebElement postalCodeInput;
-
-    @FindBy(id = "continue")
-    private WebElement continueButton;
-
-    @FindBy(id = "cancel")
-    private WebElement cancelButton;
-
-    @FindBy(css = "[data-test='error']")
-    private WebElement errorMessage;
-
-    // Checkout Step Two - Overview
-    @FindBy(className = "summary_subtotal_label")
-    private WebElement itemTotal;
-
-    @FindBy(className = "summary_tax_label")
-    private WebElement taxLabel;
-
-    @FindBy(className = "summary_total_label")
-    private WebElement totalLabel;
-
-    @FindBy(id = "finish")
-    private WebElement finishButton;
-
-    // Checkout Complete
-    @FindBy(className = "complete-header")
-    private WebElement completeHeader;
-
-    @FindBy(className = "complete-text")
-    private WebElement completeText;
-
-    @FindBy(id = "back-to-products")
-    private WebElement backHomeButton;
-
-    public CheckoutPage(WebDriver driver) {
-        super(driver);
+    @Given("I have added {string} to the cart")
+    public void iHaveAddedToTheCart(String productName) {
+        inventoryPage = new InventoryPage(driver);
+        inventoryPage.addProductToCart(productName);
     }
 
-    public void enterFirstName(String firstName) {
-        type(firstNameInput, firstName);
+    @When("I navigate to the cart")
+    public void iNavigateToTheCart() {
+        inventoryPage = new InventoryPage(driver);
+        cartPage = inventoryPage.goToCart();
     }
 
-    public void enterLastName(String lastName) {
-        type(lastNameInput, lastName);
+    @When("I click checkout")
+    public void iClickCheckout() {
+        checkoutPage = cartPage.clickCheckout();
     }
 
-    public void enterPostalCode(String postalCode) {
-        type(postalCodeInput, postalCode);
+    @When("I enter checkout information:")
+    public void iEnterCheckoutInformation(DataTable dataTable) {
+        List<Map<String, String>> data = dataTable.asMaps();
+        Map<String, String> info = data.get(0);
+        checkoutPage.fillCheckoutInfo(
+            info.get("firstName"),
+            info.get("lastName"),
+            info.get("postalCode")
+        );
     }
 
-    public void fillCheckoutInfo(String firstName, String lastName, String postalCode) {
-        if (firstName != null && !firstName.isEmpty()) enterFirstName(firstName);
-        if (lastName != null && !lastName.isEmpty()) enterLastName(lastName);
-        if (postalCode != null && !postalCode.isEmpty()) enterPostalCode(postalCode);
+    @When("I click continue")
+    public void iClickContinue() {
+        checkoutPage.clickContinue();
     }
 
-    public void clickContinue() {
-        click(continueButton);
+    @When("I click finish")
+    public void iClickFinish() {
+        checkoutPage.clickFinish();
     }
 
-    public CartPage clickCancel() {
-        click(cancelButton);
-        return new CartPage(driver);
+    @When("I click cancel on checkout page")
+    public void iClickCancelOnCheckoutPage() {
+        cartPage = checkoutPage.clickCancel();
     }
 
-    public String getErrorMessage() {
-        return getText(errorMessage);
+    @Then("I should see the order summary")
+    public void iShouldSeeTheOrderSummary() {
+        assertThat(checkoutPage.isOnOverviewPage())
+            .as("Should be on order overview page")
+            .isTrue();
     }
 
-    public boolean isErrorDisplayed() {
-        return isDisplayed(errorMessage);
+    @Then("I should see the order confirmation message {string}")
+    public void iShouldSeeTheOrderConfirmationMessage(String expectedMessage) {
+        assertThat(checkoutPage.isOrderComplete())
+            .as("Order should be complete")
+            .isTrue();
+        assertThat(checkoutPage.getConfirmationMessage())
+            .as("Confirmation message should match")
+            .isEqualTo(expectedMessage);
     }
 
-    // Overview Page Methods
-    public boolean isOnOverviewPage() {
-        return getCurrentUrl().contains("checkout-step-two");
+    @Then("I should see checkout error {string}")
+    public void iShouldSeeCheckoutError(String expectedError) {
+        assertThat(checkoutPage.isErrorDisplayed())
+            .as("Error should be displayed")
+            .isTrue();
+        assertThat(checkoutPage.getErrorMessage())
+            .as("Error message should match")
+            .isEqualTo(expectedError);
     }
 
-    public String getItemTotal() {
-        return getText(itemTotal).replace("Item total: ", "");
+    @Then("I should be on the cart page")
+    public void iShouldBeOnTheCartPage() {
+        assertThat(cartPage.isOnCartPage())
+            .as("Should be on cart page")
+            .isTrue();
     }
 
-    public String getTax() {
-        return getText(taxLabel).replace("Tax: ", "");
+    @Then("the item total should be {string}")
+    public void theItemTotalShouldBe(String expectedTotal) {
+        assertThat(checkoutPage.getItemTotal())
+            .as("Item total should match")
+            .isEqualTo(expectedTotal);
     }
 
-    public String getTotal() {
-        return getText(totalLabel).replace("Total: ", "");
-    }
-
-    public void clickFinish() {
-        click(finishButton);
-    }
-
-    // Complete Page Methods
-    public boolean isOrderComplete() {
-        return getCurrentUrl().contains("checkout-complete");
-    }
-
-    public String getConfirmationMessage() {
-        return getText(completeHeader);
-    }
-
-    public String getConfirmationText() {
-        return getText(completeText);
-    }
-
-    public InventoryPage clickBackHome() {
-        click(backHomeButton);
-        return new InventoryPage(driver);
+    @Then("the tax should be calculated correctly")
+    public void theTaxShouldBeCalculatedCorrectly() {
+        String tax = checkoutPage.getTax();
+        assertThat(tax)
+            .as("Tax should be present")
+            .isNotEmpty();
     }
 }

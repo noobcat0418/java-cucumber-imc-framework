@@ -47,6 +47,14 @@ public class DriverManager {
                 options.addArguments("--disable-extensions");
                 options.addArguments("--no-sandbox");
                 options.addArguments("--disable-dev-shm-usage");
+
+                // Disable password manager and breach detection popups
+                options.setExperimentalOption("prefs", java.util.Map.of(
+                    "credentials_enable_service", false,
+                    "profile.password_manager_enabled", false,
+                    "profile.password_manager_leak_detection", false
+                ));
+
                 webDriver = new ChromeDriver(options);
             }
         }

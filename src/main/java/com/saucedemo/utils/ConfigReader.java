@@ -1,68 +1,57 @@
 package com.saucedemo.utils;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
-import java.time.Duration;
+public class ConfigReader {
+    private static final Properties properties = new Properties();
 
-public class DriverManager {
-    private static final ThreadLocal<WebDriver> driver = new ThreadLocal<>();
-    
-    private DriverManager() {}
-
-    public static WebDriver getDriver() {
-        if (driver.get() == null) {
-            initializeDriver();
+    static {
+        try (InputStream input = ConfigReader.class.getClassLoader()
+                .getResourceAsStream("config.properties")) {
+            if (input == null) {
+                throw new RuntimeException("Unable to find config.properties");
+            }
+            properties.load(input);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load config.properties", e);
         }
-        return driver.get();
     }
 
-    public static void initializeDriver() {
-        String browser = ConfigReader.getProperty("browser", "chrome");
-        boolean headless = Boolean.parseBoolean(ConfigReader.getProperty("headless", "false"));
-        
-        WebDriver webDriver;
-        
-        switch (browser.toLowerCase()) {
-            case "firefox" -> {
-                WebDriverManager.firefoxdriver().setup();
-                webDriver = new FirefoxDriver();
-            }
-            case "edge" -> {
-                WebDriverManager.edgedriver().setup();
-                webDriver = new EdgeDriver();
-            }
-            default -> {
-                WebDriverManager.chromedriver().setup();
-                ChromeOptions options = new ChromeOptions();
-                if (headless) {
-                    options.addArguments("--headless=new");
-                }
-                options.addArguments("--disable-gpu");
-                options.addArguments("--window-size=1920,1080");
-                options.addArguments("--disable-extensions");
-                options.addArguments("--no-sandbox");
-                options.addArguments("--disable-dev-shm-usage");
-                webDriver = new ChromeDriver(options);
-            }
-        }
-        
-        int timeout = Integer.parseInt(ConfigReader.getProperty("implicit.wait", "10"));
-        webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(timeout));
-        webDriver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
-        webDriver.manage().window().maximize();
-        
-        driver.set(webDriver);
+    public static String getProperty(String key) {
+        return properties.getProperty(key);
     }
 
-    public static void quitDriver() {
-        if (driver.get() != null) {
-            driver.get().quit();
-            driver.remove();
-        }
+    public static String getProperty(String key, String defaultValue) {
+        return properties.getProperty(key, defaultValue);
+    }
+
+    public static String getBaseUrl() {
+        return getProperty("base.url");
+    }
+
+    public static String getBrowser() {
+        return getProperty("browser", "chrome");
+    }
+
+    public static boolean isHeadless() {
+        return Boolean.parseBoolean(getProperty("headless", "false"));
+    }
+
+    public static int getImplicitWait() {
+        return Integer.parseInt(getProperty("implicit.wait", "10"));
+    }
+
+    public static int getExplicitWait() {
+        return Integer.parseInt(getProperty("explicit.wait", "15"));
+    }
+
+    public static String getDefaultUsername() {
+        return getProperty("default.username");
+    }
+
+    public static String getDefaultPassword() {
+        return getProperty("default.password");
     }
 }

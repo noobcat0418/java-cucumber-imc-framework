@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class LoginSteps {
     private final WebDriver driver = DriverManager.getDriver();
-    private final LoginPage loginPage = new LoginPage(driver);
+    private LoginPage loginPage = new LoginPage(driver);
     private InventoryPage inventoryPage;
 
     @Given("I am on the login page")
@@ -49,7 +49,8 @@ public class LoginSteps {
 
     @When("I click logout")
     public void iClickLogout() {
-        loginPage = inventoryPage.logout();
+        // Menu is already open from previous step, just click the logout link
+        loginPage = inventoryPage.clickLogoutLink();
     }
 
     @Then("I should be redirected to the inventory page")

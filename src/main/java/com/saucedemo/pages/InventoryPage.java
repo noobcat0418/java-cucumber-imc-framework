@@ -108,6 +108,12 @@ public class InventoryPage extends BasePage {
         return new LoginPage(driver);
     }
 
+    public LoginPage clickLogoutLink() {
+        waitForClickable(logoutLink);
+        click(logoutLink);
+        return new LoginPage(driver);
+    }
+
     public ProductDetailPage clickOnProduct(String productName) {
         for (WebElement name : productNames) {
             if (name.getText().equalsIgnoreCase(productName)) {
